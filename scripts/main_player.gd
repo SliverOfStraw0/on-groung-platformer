@@ -3,12 +3,13 @@ extends CharacterBody2D
 @export var acc = 100
 @export var maxSpeed = 800
 
-@export var maxJumps = 2
+@export var maxJumps = 1
 @export var currentJump = 0
 
-@export var gravity = 2000
+@export var gravity = 2200
 
 @export var JUMP_VELOCITY = 40000.0
+
 
 
 func _physics_process(delta: float) -> void:
@@ -30,7 +31,8 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_accept") and currentJump < maxJumps:
 		currentJump += 1
 		velocity.y = -JUMP_VELOCITY * delta
-	elif $RayCast2D.collide_with_bodies:
+	
+	if $RayCast2D.is_colliding():
 		currentJump = 0
 
 
