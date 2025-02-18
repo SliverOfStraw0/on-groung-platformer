@@ -1,22 +1,41 @@
 extends CharacterBody2D
 
-@export var acc = 100
-@export var maxSpeed = 800
+@export var acc = 200
+@export var drag = 0.025
+
+@export var defMaxSpeed = 900
+var maxSpeed = defMaxSpeed
+
+
 
 @export var maxJumps = 1
 @export var currentJump = 0
 
-@export var gravity = 2200
+@export var defultGrav = 2500
+var gravity = defultGrav
 
-@export var JUMP_VELOCITY = 40000.0
+@export var JUMP_VELOCITY = 50000.0
 
 
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
+	
+	slideAndStopMovement(delta)
+	basicMovement(delta)
+	
+	if $RayCast2D.is_colliding():
+		currentJump = 0
+		gravity = defultGrav
+
+	move_and_slide()
+	
+	
+	
+	
+func basicMovement(delta):
 	if not is_on_floor():
 		velocity.y += gravity * delta
-		
+	
 	if Input.is_action_pressed("left"):
 
 		velocity.x = max(velocity.x - acc, -maxSpeed)
@@ -24,16 +43,19 @@ func _physics_process(delta: float) -> void:
 		
 		velocity.x = min(velocity.x + acc, maxSpeed)
 	else:
-		velocity.x = lerp(velocity.x, 0.0, 0.01)
+		velocity.x = lerp(velocity.x, 0.0, drag)
 
-	# Handle jump.
 	
 	if Input.is_action_just_pressed("ui_accept") and currentJump < maxJumps:
 		currentJump += 1
 		velocity.y = -JUMP_VELOCITY * delta
-	
-	if $RayCast2D.is_colliding():
-		currentJump = 0
-
-
-	move_and_slide()
+		
+func slideAndStopMovement(delta):
+	if Input.is_action_just_pressed("slideStomp"):
+		if !$RayCast2D.is_colliding():
+			gravity = 50000
+		else:
+			gravity = defultGrav
+			maxSpeed = 2000
+	elif Input.is_action_just_released("slideStomp"):
+		maxSpeed = defMaxSpeed
