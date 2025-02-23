@@ -4,11 +4,12 @@ extends CharacterBody2D
 @export var drag = 0.15
 @export var defMaxSpeed = 650
 var maxSpeed = defMaxSpeed
+var a = 1
 
 
 @export var maxJumps = 1
 @export var currentJump = 0
-@export var JUMP_VELOCITY = 50000.0
+@export var JUMP_VELOCITY = 55000.0
 @export var JMinscrease = 0.1
 @export var defJumpMultiplyer = 1.5
 var jumpMultiplyer = defJumpMultiplyer
@@ -20,6 +21,8 @@ var isOnJumpableWall = false
 @export var defultGrav = 2500
 var gravity = defultGrav
 
+@onready var jumpCast = $ShapeCast2D
+
 
 
 
@@ -28,7 +31,9 @@ func _physics_process(delta: float) -> void:
 	slideAndStopMovement(delta)
 	basicMovement(delta)
 	
-	if $RayCast2D.is_colliding():
+	if jumpCast.is_colliding():
+		#a += 1
+		#print("COL" + str(a))
 		currentJump = 0
 		gravity = defultGrav
 
@@ -54,24 +59,27 @@ func basicMovement(delta):
 	
 	if Input.is_action_just_pressed("ui_accept") and currentJump < maxJumps:
 		currentJump += 1
+		print(currentJump)
 		if isOnJumpableWall:
 			velocity.x = walljumpdisplace*get_wall_normal().x
 		
 		if !canSlamJump:
 			velocity.y = -JUMP_VELOCITY * delta
-		else:
+		elif canSlamJump and jumpCast.is_colliding():
 			velocity.y = ((-JUMP_VELOCITY)*jumpMultiplyer) * delta
 			jumpMultiplyer += JMinscrease
+		elif canSlamJump and !jumpCast.is_colliding():
+			velocity.y = -JUMP_VELOCITY * delta
 		
 func slideAndStopMovement(delta):
 	if Input.is_action_just_pressed("slideStomp"):
-		if !$RayCast2D.is_colliding():
-			gravity = 50000
+		if !jumpCast.is_colliding():
+			gravity = 45000
 			canSlamJump = true
 			$"time fore higher jump after slam".start()
 		else:
 			gravity = defultGrav
-			maxSpeed = 2000
+			maxSpeed = 1400
 	elif Input.is_action_just_released("slideStomp"):
 		maxSpeed = defMaxSpeed
 		
@@ -79,6 +87,7 @@ func slideAndStopMovement(delta):
 func _on_time_fore_higher_jump_after_slam_timeout() -> void:
 	canSlamJump = false
 	jumpMultiplyer = defJumpMultiplyer
+	currentJump = 0
 
 
 func _on_area_2d_area_entered(area: Area2D) -> void:

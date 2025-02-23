@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ce8l7f5k3yjwt"]
+[gd_scene load_steps=6 format=3 uid="uid://ce8l7f5k3yjwt"]
 
 [ext_resource type="Script" path="res://scripts/main_player.gd" id="1_ko7vv"]
-[ext_resource type="Texture2D" uid="uid://mpro4nbpabl4" path="res://icon.svg" id="2_rntft"]
+[ext_resource type="Texture2D" uid="uid://mpro4nbpabl4" path="res://sprites/icon.svg" id="2_rntft"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7airx"]
 radius = 31.0
@@ -9,6 +9,9 @@ height = 128.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_31mc7"]
 size = Vector2(64, 128)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3nbhi"]
+size = Vector2(50, 20)
 
 [node name="mainPlayer" type="CharacterBody2D"]
 script = ExtResource("1_ko7vv")
@@ -20,9 +23,6 @@ texture = ExtResource("2_rntft")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_7airx")
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
-target_position = Vector2(0, 96)
-
 [node name="time fore higher jump after slam" type="Timer" parent="."]
 wait_time = 0.5
 
@@ -30,6 +30,10 @@ wait_time = 0.5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_31mc7")
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+shape = SubResource("RectangleShape2D_3nbhi")
+target_position = Vector2(0, 96)
 
 [connection signal="timeout" from="time fore higher jump after slam" to="." method="_on_time_fore_higher_jump_after_slam_timeout"]
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
