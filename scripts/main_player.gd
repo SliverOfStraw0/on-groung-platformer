@@ -58,8 +58,8 @@ func basicMovement(delta):
 
 	
 	if Input.is_action_just_pressed("ui_accept") and currentJump < maxJumps:
-		currentJump += 1
 		print(currentJump)
+		currentJump += 1
 		if isOnJumpableWall:
 			velocity.x = walljumpdisplace*get_wall_normal().x
 		
@@ -88,6 +88,7 @@ func _on_time_fore_higher_jump_after_slam_timeout() -> void:
 	canSlamJump = false
 	jumpMultiplyer = defJumpMultiplyer
 	currentJump = 0
+	print("STOPPED")
 
 
 func _on_area_2d_area_entered(area: Area2D) -> void:
