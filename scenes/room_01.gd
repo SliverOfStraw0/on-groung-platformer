@@ -12,4 +12,5 @@ func _process(delta: float) -> void:
 
 
 func _on_special_area_entered(area: Area2D) -> void:
-	pass # Replace with function body.
+	if area.is_in_group("player"):
+		print("AHHH TOUCHING ME !! HELP ")

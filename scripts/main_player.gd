@@ -58,7 +58,7 @@ func basicMovement(delta):
 
 	
 	if Input.is_action_just_pressed("ui_accept") and currentJump < maxJumps:
-		print(currentJump)
+		#print(currentJump)
 		currentJump += 1
 		if isOnJumpableWall:
 			velocity.x = walljumpdisplace*get_wall_normal().x
