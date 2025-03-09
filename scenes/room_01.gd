@@ -14,3 +14,6 @@ func _process(delta: float) -> void:
 func _on_special_area_entered(area: Area2D) -> void:
 	if area.is_in_group("player"):
 		print("AHHH TOUCHING ME !! HELP ")
+		$mainPlayer/RemoteTransform2D.queue_free()
+		var tween = get_tree().create_tween()
+		tween.tween_property($mainCam, "position", Vector2(31559,-51138), 6)
